@@ -20,14 +20,14 @@ terminate() ->
 gen() -> spawn(?MODULE, loop, []).
 loop() -> 
   receive
-    call -> start_ringing(self())
+    {call, Pid} -> incomming(Pid)
   end,
   loop().
 
-start_ringing(Pid) ->
+incomming(Pid) ->
   phone ! {incomming, Pid}.
 
-%% client behaves..
+%% client events.
 
 stop_ringing() ->
   phone ! other_on_hook, ok.
@@ -41,7 +41,9 @@ start_tone() ->
 
 call(Pid) ->
   phone ! {call, Pid}, ok.
-  
+
+
+
 bye() ->
   phone ! on_hook, 
   ok.
